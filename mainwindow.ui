@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -254,6 +254,9 @@
         <height>31</height>
        </rect>
       </property>
+      <property name="maxCount">
+       <number>2147483647</number>
+      </property>
      </widget>
      <widget class="QLabel" name="label_2">
       <property name="geometry">
@@ -335,7 +338,7 @@
      <x>0</x>
      <y>0</y>
      <width>1392</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

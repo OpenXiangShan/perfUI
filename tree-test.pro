@@ -1,4 +1,4 @@
-QT       += core gui charts
+QT       += core gui charts core5compat
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,10 +21,10 @@ FORMS += \
     mainwindow.ui
 
 INCLUDEPATH += \
-    /usr/include/python3.8
+    /usr/include/python3.9
 
 LIBS += \
-    -L/usr/lib/python3.8/config-3.8-x86_64-linux-gnu -L/usr/lib -lpython3.8
+    -L/usr/lib/python3.9/config-3.9-x86_64-linux-gnu -L/usr/lib -lpython3.9
 
 
 # Default rules for deployment.

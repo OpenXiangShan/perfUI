@@ -15,12 +15,12 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-QT_CHARTS_BEGIN_NAMESPACE
+QT_BEGIN_NAMESPACE
 class QChartView;
 class QChart;
-QT_CHARTS_END_NAMESPACE
+QT_END_NAMESPACE
 
-QT_CHARTS_USE_NAMESPACE
+QT_USE_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
@@ -35,8 +35,6 @@ private slots:
 
     void on_comboBox_currentIndexChanged(int index);
 
-    void on_comboBox_2_currentIndexChanged(const QString &arg1);
-
     void on_horizontalSlider_valueChanged(int value);
 
     void on_horizontalSlider_2_valueChanged(int value);
@@ -46,6 +44,10 @@ private slots:
     void on_pushButton_2_clicked();
 
     void on_MainWindow_iconSizeChanged(const QSize &iconSize);
+
+    void on_comboBox_2_currentTextChanged(const QString &arg1);
+
+    void on_comboBox_2_currentIndexChanged(int index);
 
 private:
     void resizeEvent(QResizeEvent*);

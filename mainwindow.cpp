@@ -5,6 +5,7 @@
 #include <QtCharts/qbarseries.h>
 #include <QtCharts/qvalueaxis.h>
 #include <QBarCategoryAxis>
+#include <QRegExp>
 #pragma push_macro("slots")
 #undef slots
 #include "Python.h"
@@ -264,11 +265,16 @@ void loadHistogram(QTreeWidgetItem* node, long* arg1, long arg2, void* arg3) {
     if (rx.indexIn(node->text(0)) == -1) {
         return;
     }
+    qDebug() << node->text(0);
     QStringList info = node->text(0).split("_");
     int highBound = info.last().toInt();
     info.removeLast();
     int lowBound = info.last().toInt();
     info.removeLast();
+    int step = highBound - lowBound;
+    if (step <= 0) {
+        return;
+    }
     QString leafName = info.join("");
     QStringList* fullNameList = new QStringList();
     fullNameList->clear();
@@ -283,7 +289,7 @@ void loadHistogram(QTreeWidgetItem* node, long* arg1, long arg2, void* arg3) {
         fullNameListReverse->append(fullNameList->at(i));
     }
     QString histogramName = fullNameListReverse->join(".");
-    int step = highBound - lowBound;
+
     int index = lowBound / step;
     Histogram* histogramDB = (Histogram*)arg3;
     for (int i = 0; i < 1000; i++) {
@@ -323,47 +329,6 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
     fpDigit = index;
     long longIndex = index;
     iterateTreeLeave(setFP, &longIndex, mainTime, nullptr);
-}
-
-void MainWindow::on_comboBox_2_currentIndexChanged(const QString &arg1)
-{
-    if (chartView == nullptr) {
-        chartView = new QChartView();
-    }
-    for (int i = 0; i < 200; i++) {
-        if (histogramDB[i].title == arg1) {
-            QBarSet* set0 = new QBarSet(arg1);
-            long sum = 0;
-            for (int j = 0; j <= histogramDB[i].size; j++) {
-                sum += histogramDB[i].data[j];
-            }
-            for (int j = 0; j <= histogramDB[i].size; j++) {
-                *set0 << (float)histogramDB[i].data[j]/sum;
-            }
-            QBarSeries *series = new QBarSeries();
-            series->append(set0);
-            series->setLabelsFormat("@valueh");
-            QChart* chart = new QChart();
-            chart->addSeries(series);
-            chart->createDefaultAxes();
-
-            QBarCategoryAxis *axisX = new QBarCategoryAxis();
-            QStringList strListX;
-            for (int k = 0; k <= (histogramDB[i].size+1)*histogramDB[i].step; k += histogramDB[i].step) {
-                strListX.append(QString::number(k));
-            }
-            axisX->append(strListX);
-            chart->setAxisX(axisX, series);
-
-            chartView->setChart(chart);
-            chartView->resize(chartWidth, chartHeight);
-            chartView->move(40, 80);
-            chartView->setParent(ui->tab_3);
-            chartView->resize(chartWidth+(ui->horizontalSlider_2->value()-50)*50, chartHeight+(ui->horizontalSlider->value()-50)*20);
-            chartView->show();
-            return;
-        }
-    }
 }
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
@@ -439,5 +404,52 @@ void MainWindow::on_pushButton_2_clicked()
     ui->checkBox->setChecked(false);
     on_checkBox_clicked(false);
     dataDiff(diffFilename);
+
+}
+
+void MainWindow::on_comboBox_2_currentTextChanged(const QString &arg1)
+{
+    if (chartView == nullptr) {
+        chartView = new QChartView();
+    }
+    for (int i = 0; i < 200; i++) {
+        if (histogramDB[i].title == arg1) {
+            QBarSet* set0 = new QBarSet(arg1);
+            long sum = 0;
+            for (int j = 0; j <= histogramDB[i].size; j++) {
+                sum += histogramDB[i].data[j];
+            }
+            for (int j = 0; j <= histogramDB[i].size; j++) {
+                *set0 << (float)histogramDB[i].data[j]/sum;
+            }
+            QBarSeries *series = new QBarSeries();
+            series->append(set0);
+            series->setLabelsFormat("@valueh");
+            QChart* chart = new QChart();
+            chart->addSeries(series);
+            chart->createDefaultAxes();
+
+            QBarCategoryAxis *axisX = new QBarCategoryAxis();
+            QStringList strListX;
+            for (int k = 0; k <= (histogramDB[i].size+1)*histogramDB[i].step; k += histogramDB[i].step) {
+                strListX.append(QString::number(k));
+            }
+            axisX->append(strListX);
+            chart->setAxisX(axisX, series);
+
+            chartView->setChart(chart);
+            chartView->resize(chartWidth, chartHeight);
+            chartView->move(40, 80);
+            chartView->setParent(ui->tab_3);
+            chartView->resize(chartWidth+(ui->horizontalSlider_2->value()-50)*50, chartHeight+(ui->horizontalSlider->value()-50)*20);
+            chartView->show();
+            return;
+        }
+    }
+}
+
+
+void MainWindow::on_MainWindow_iconSizeChanged(const QSize &iconSize)
+{
 
 }
